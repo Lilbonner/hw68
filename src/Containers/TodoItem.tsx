@@ -1,29 +1,29 @@
-import React from "react";
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import {toggleTodo, removeTodo, Todo} from '../Features/TodoSlice';
 
 interface TodoItemProps {
-  id: number;
-  text: string;
-  completed: boolean;
-  onToggle: (id: number) => void;
-  onRemove: (id: number) => void;
+    todo: Todo;
 }
 
-const TodoItem: React.FC<TodoItemProps> = (props) => {
-  const handleCheckboxClick = () => {
-    props.onToggle(props.id);
-  };
+const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
+    const dispatch = useDispatch();
 
-  const handleRemoveClick = () => {
-    props.onRemove(props.id);
-  };
+    const handleToggle = () => {
+        dispatch(toggleTodo(todo));
+    };
 
-  return (
-    <div className={`todo ${props.completed ? "completed" : ""}`}>
-      <input type="checkbox" checked={props.completed} onChange={handleCheckboxClick} />
-      <label>{props.text}</label>
-      <button onClick={handleRemoveClick}>Delete</button>
-    </div>
-  );
+    const handleRemove = () => {
+        dispatch(removeTodo(todo.id));
+    };
+
+    return (
+        <div>
+            <input type="checkbox" checked={todo.completed} onChange={handleToggle} />
+            <span>{todo.title}</span>
+            <button onClick={handleRemove}>Delete</button>
+        </div>
+    );
 };
 
 export default TodoItem;
