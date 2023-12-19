@@ -1,20 +1,23 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import {toggleTodo, removeTodo, Todo} from '../Features/TodoSlice';
+import { Todo } from '../Features/TodoSlice';
+import { toggleTodo, removeTodo } from '../Features/TodoSlice';
 
 interface TodoItemProps {
     todo: Todo;
+    onToggle: () => void;
+    onRemove: () => void;
 }
 
-const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
+const TodoItem: React.FC<TodoItemProps> = ({ todo, onToggle, onRemove }) => {
     const dispatch = useDispatch();
 
     const handleToggle = () => {
-        dispatch(toggleTodo(todo));
+        dispatch(toggleTodo(todo)).then(onToggle);
     };
 
     const handleRemove = () => {
-        dispatch(removeTodo(todo.id));
+        dispatch(removeTodo(todo.id)).then(onRemove);
     };
 
     return (

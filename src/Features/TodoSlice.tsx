@@ -18,19 +18,17 @@ export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
 
 export const addTodo = createAsyncThunk('todos/addTodo', async (title: string) => {
     const response = await axiosApi.post('https://plovo-js-default-rtdb.europe-west1.firebasedatabase.app/todos.json', { title, completed: false });
-    return { ...response.data, title, completed: false };
+    return response.data;
 });
 
 export const toggleTodo = createAsyncThunk(
   'todos/toggleTodo',
     async (todo: Todo) => {
     const response = await axiosApi.patch(`https://plovo-js-default-rtdb.europe-west1.firebasedatabase.app/todos/${todo.id}.json`, {  completed: !todo.completed });
-    return { ...response.data, completed: !todo.completed };
+    return response.data;
 });
 
-export const removeTodo = createAsyncThunk(
-  'todos/removeTodo',
-    async (id: number) => {
+export const removeTodo = createAsyncThunk('todos/removeTodo', async (id: number) => {
     await axiosApi.delete(`https://plovo-js-default-rtdb.europe-west1.firebasedatabase.app/todos/${id}.json`);
     return id;
 });
@@ -52,7 +50,7 @@ const todoSlice = createSlice({
             })
             .addCase(toggleTodo.fulfilled, (state, action) => {
                 const todoIndex = state.todos.findIndex((todo) => todo.id === action.payload.id);
-                state.todos[todoIndex].completed = action.payload.completed;
+                state.todos[todoIndex] = action.payload;
             })
             .addCase(removeTodo.fulfilled, (state, action) => {
                 state.todos = state.todos.filter((todo) => todo.id !== action.payload);
